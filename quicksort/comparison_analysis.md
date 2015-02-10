@@ -48,8 +48,10 @@ ggplot(res) +
   geom_line(aes(length, last, colour="Last")) +
   geom_line(aes(length, medof3, colour="Median-of-three")) +
   geom_line(aes(length, length*log(length), colour="Nlog(N)")) + 
+  scale_colour_discrete(name = "Pivot") +
   ggtitle("QuickSort: Comparison Counts by Pivot Choice") +
-  xlab("Input Array Length") + ylab("Comparisons") 
+  xlab("Input Array Length") + ylab("Comparisons") +
+  labs(linetype='Pivot')
 ```
 
 ![plot of chunk unnamed-chunk-1](./comparison_analysis_files/figure-html/unnamed-chunk-11.png) 
@@ -58,6 +60,7 @@ ggplot(res) +
 ggplot(res) + 
   geom_line(aes(length, first - medof3, colour="First")) +
   geom_line(aes(length, last - medof3, colour="Last")) +
+  scale_colour_discrete(name = "") +
   ggtitle("Difference betwen Median-of-three and First/Last") +
   xlab("Input Array Length") + ylab("Difference in Comparisons")
 ```
