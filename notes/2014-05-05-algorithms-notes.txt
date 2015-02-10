@@ -1,0 +1,166 @@
+Design and analysis of algorithms
+Week 1 notes
+
+(lecture 1)
+
+//Integer multiplication
+Grade school n-digit integer multiplication
+	is an algorithm
+	is correct
+	how many operations (as function of input length n)?
+		<= 2n operations per row
+		n rows
+		upshot: # operations overall <= constant * n^2
+
+"Perhaps the most important principle for the good algorithm designer is to refuse to be content"
+-Aho, Hopcroft, and Ullman, The Design and Analysis of Computer Algorithms, 1974
+Adopt as mantra: Can we do better?
+
+Karatsuba multiplication
+	x*y = 10^n * ac + 10^(n/2) * (ad + bc) + bd   ($)
+	step 1: recursively compute ac
+	step 2: recursively compute bd
+	step 3: recursively compute (a+b)(c+d) = ac + ad + bc + bd
+	Gauss's trick: (3) - (1) - (2) = ad + bc
+	
+	upshot: only need 3 recursive multiplications (and some additions)
+	
+
+//Course topics
+	Vocabulary for design and analysis of algorithms
+		E.g. "Big-Oh" notation
+		Sweet spot for high-level reasoning about algorithms
+	Divide and conquer algorithm design
+		Will apply to: integer multiplication, sorting, matrix multiplication, closest pair
+		General analysis methods ("Master method/theorem")
+	Randomization in algorithm design
+		Will apply to: quicksort, primality testing, graph partitioning, hashing
+	Primitives for reasoning about graphs
+		Connectivity information
+		Shortest paths
+		Structure of information/social networks
+	Use and implementation of data structures
+		Heaps, balanced binary search trees, hashing, some variants (bloom filters)
+		
+		
+//Merge Sort
+	Good introduction to divide and conquer
+	Improves over selection, insert, and bubble sort
+	
+	The sorting problem:
+		Input: array of n numbers (assume distinct for now)
+		Output: array of n numbers in sorted order
+	Merge Sort:
+		-recursively sort 1st half of input array
+		-recursively sort 2nd half of input array
+		-merge two sorted sublists into one
+		[ignores odd number of elements]
+		[ignores base case]
+		
+		Pseudocode:
+		C = output array (length = n)
+		A = 1st sorted array [n/2]
+		B = 2nd sorted array [n/2]
+		i counter for A, j counter for B
+		i = 1, j = 1
+		for k = 1 to n
+			if A[i] < B[j]
+				C[k] = A[i]
+				i++
+			else B[j] < A[i]
+				C[k] = B[j]
+				j++
+		
+		Key question: running time of Merge Sort on array of n numbers?
+		Start by asking the number of operations on single merge
+		2 operations for each initialization (see above pseudocode)
+		4 operations per for loop iteration
+		Upshot: running time of merge sort on array of m numbers is <= 4m + 2
+		For calculation purposes (crude upper bound), lets say <= 6m + 2 (since m >= 1)
+		
+		Claim: Merge Sort requires <= 6n*log2(n) + 6n to sort n numbers
+		Is this a win?  yes, it is
+		Recall: log2(n) is the # of times you divide by two until you get to 1
+		
+		Merge sort analysis:
+			How many levels does recursion tree have as function of n?
+			Yep, log2(n)
+			What is the pattern? How many subarrays, elements/subarray at each level?
+			2^j and n/2^j respectively
+			
+			Total # of operations at level j:
+				[each j=0,1,2,....,log2(n)]
+				<= 2^j * 6(n/2^j) = 6n (independent of j!)
+				why? perfect equilibrium between doubling of # of arrays, halving of array lengths
+				So cool.
+			So, upperbound for algorithm is # of levels * upper bound of work at each level
+			<= 6n(log2(n) + 1) = 6n * log2(n) + 6n
+		
+		
+	
+//Guiding principles for analysis of algorithms
+	#1) "worst-case analysis"
+		our running time bound holds for every input of length n
+		
+		as opposed to: "average-case" analysis, benchmarks
+		these require domain knowledge, where worst-case does not
+		also: worst-case usually easy to analyze
+		
+	#2) Not much attention given to constant factors, lower-order terms
+		Justifications?
+			-Makes the mathematics much easier
+			-constants depend on architecture/compiler/programmer anyways
+			-lose very little predictive power in doing so (as we'll see)
+			
+	#3) Asymptotic analysis
+		focus on running time for large input sizes n
+		e.g. 6nlog2(n)+6n "better than" any function with quadratic relationship with n... for... what? That's right, for n sufficiently large.
+		Justification?
+			-only big problems are interesting!
+			-don't need divide and conquer paradigm to sort 100 numbers!
+			
+	What is a "fast" algorithm?
+		Adopt these 3 guiding principles in this course
+		fast algorithm ~ worst case running time grows slowly with input size
+		"sweet spot": mathematical tractability and predictive power
+		holy grail: linear running time (or close to it)
+		
+
+(lecture 2)
+//Asymptotic Analysis
+The Gist
+	-language by which every programmer/computer scientist discusses the high level performance of computer algorithms
+	-"sweet spot": coarse enough to ignore details one wants to ignore (architecture, compiler, etc.), sharp enough to be useful in making comparisons between different algorithms (esp. on large inputs)
+	-High level idea: supress constant factors and lower order terms
+	
+	Formal definition
+	Big-Oh: T(n) = O(f(n)) if and only if there exist constants c,no > 0 such that T(n)<=c*f(n) for all n>=no
+	
+	Basic examples:
+		#1) Claim: if T(n) = akn^k + ..... + a1n + ao, then T(n) = O(n^k)
+			Proof: Choose no=1 and c=abs(ak) + abs(ak-1) + .... + abs(a1) + abs(a0)
+				Wts that Vn>=1, T(n) <= c*n^k
+				We have, for every n>=1, T(n) <= abs(ak)n^k + .... abs(a1)*n + abs(a0)
+				which => T(n) <= abs(ak)n^k + ... + abs(a1)n^k + abs(a0)n^k
+				which = c*n^k  QED
+		#2) Claim: for every k?= 1, n^k is not O(n^(k-1))
+			Proof: by contradiction.
+				Suppose n^k = O(n^(k-1)).
+				Then E constants c,no>0 such that n^k <= c*n^(k-1) Vn>no.
+				But then [cancelling n^(k-1) from both sides]:
+				n<=c Vn>no, which is patently false. X
+		
+	Big Omega and Theta
+	Close relatives to Big-Oh
+	
+	Omega Notation: T(n) = Omega(f(n)) if and only if E constants c,no such that T(n)>=c*f(n) Vn>=no
+	Theta notation: T(n) = Theta(f(n)) if and only if T(n)=O(f(n)) and T(n)=Omega(f(n))
+					Equivalent: E constants c1,c2,no such that c1f(n) <= T(n) <= c2f(n) Vn>no
+	
+	
+
+
+
+
+
+	

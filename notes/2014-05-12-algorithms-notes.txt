@@ -1,0 +1,171 @@
+Design and analysis of algorithms
+week 2
+
+
+//The Master Method
+General mathematical tool for analyzing the running time of divide and conquer algorithms
+
+Motivation: potentially useful algorithmic ideas often need mathematical analysis to evaluate
+
+Cool feature: Black-box for solving recurrences
+Assumption: all subproblems have equal size.
+
+Recurrence format:
+1) Base case: T(n) <= a constant for all sufficiently small n
+2) For all larger n: 
+	T(n) <= a*T(n/b) + O(n^d)
+		a = number of recursive calls (>= 1)
+		b = input size shrinkage (>1)
+		d = exponent in running time of "combine" step (>=0)
+		where a*T(n/b) means a recursive calls each of input size n/b
+		a,b,d are independent of n!
+		
+		
+The upper bound on running time of recurrence on input size n has three cases with two triggers which determine the trigger case:
+a and b^d
+if a = b^d:
+	T(n) = O(n^d * log(n)
+	where log base here does not matter as difference between bases becomes leading constant
+elif a < b^d:
+	T(n) = O(n^d)
+elif a > b^d:
+	O(n^(logb(a)))
+	where logb(a) is log with base b of a
+	and as base is in exponent, important!
+	
+Note, only gives upper bounds (i.e. big Oh)
+
+So, the master method:
+	If T(n) <= aT(n/b)+O(n^d),
+	then:
+	T(n) = O(n^d * log(n)) if a = b^d	(Case 1)
+		= O(n^d) if a < b^d				(Case 2)
+		= O(n^(logb(a))) if a > b^d		(Case 3)
+
+
+//Examples
+#1) Merge sort
+ a = 2	(two recursive calls)
+ b = 2	(array split in half)
+ d = 1	(linear "combine" step)
+ 
+ a = 2 = b^d ==> Case 1
+ which implies that T(n) <= O(n^d * log(n))
+ ==> merge sort is O(nlog(n)) which we already knew!
+ 
+#2) Binary search
+ 	a = 1
+	b = 2
+	d = 0
+	==> a = 1 = b^d ==> T(n) = O(n^d * log(n)) = O(log(n))
+
+
+#3) Basic 2 n-digit integer multiplication
+	a = 4
+	b = 2
+	d = 1
+	a = 4, b^d = 2 ==> a > b^d ==> Case 3
+	==> T(n) = O(n^logb(a)) = O(n^log2(4)) = O(n^2)
+		
+#4) Gauss recursive integer multiplication
+	a = 3
+	b = 2
+	d = 1
+	a = 3, b^d = 2 ==> a > b^d ==> Case 3
+	==> T(n) = O(n^logb(a)) = O(n^log2(3)) ~ O(n^1.59)
+	
+#5) Strassen's matrix multiplication algorithm
+	a = 7
+	b = 2
+	d = 2
+	so, a = 7, b^d = 4 ==> a > b^d ==> Case 3
+	==> T(n) = O(n^log2(7)) ~ O(n^2.81)
+	beats the naive iterative algorithm!
+	
+#6) Fictitious recurrence (trigger case 2!)
+	T(n) <= 2T(n/2) + O(n^2)
+		a = 2
+		b = 2
+		d = 2
+		==> a = 2 < 4 = b^d ==> Case 2
+		==> T(n) = O(n^2)
+		Note here that all work that is counted is at root of recursion tree (i.e. outside of the recursive calls!)
+		
+
+//Proof of master method (see lines 38-43 for definition)
+Assume: recurrence is
+			(i) T(1) <= c
+			(ii) T(n) <= aT(n/b) + cn^d
+		and n is a power of b (general case is similar, but more tedious)
+		
+Idea: generalize MergeSort analysis (i.e. use a recursion tree)
+Calculate work at level j of recursion tree (ignoring work in recursive calls)
+a^j is the # of level j subproblems
+n/b^j is the size of each level j subproblem
+How does n/b^j determine amount of work/operations done?
+no more than c*(n/b^j)^d
+So work done at each level j:
+<=a^j*c*(n/b^j)^d
+separating terms that are independent of j:
+= c*n^d * (a/b^d)^j
+summing over all levels:
+total work <= cn^d * sum over j [ (a/b^d)^j]    (call this equation %)
+
+more here: http://en.wikipedia.org/wiki/Master_theorem
+
+Interpretation of the three cases:
+	How to think about (%)
+	cn^d * {j (a/b^d)^j
+	
+	interpretation:
+		a = rate of subproblem proliferation or RSP (force of evil!)
+		b^d = rate of work shrinkage or RWS pre subproblem (force of good!)
+		
+		Intuition here is that, for example, when b = 2 and d = 1 (or, the input size is halved each level while the work at each level is linear), then not only is input size halved, but so is the amount of work done at each level! (i.e. merge sort)
+		
+	Intuition for the 3 cases:
+	Upper bound for level j: cn^d * (a/b^d)^j
+	(1) RSP = RWS ==> same amount of work at each level (like merge sort)
+		Expect O(n^d * logn)
+	(2) RSP < RWS ==> less work each level => most work at root
+		Might expect O(n^d)
+	(3) RSP > RWS ==> more work each level => most work at leaves
+		Might expect O(# leaves)
+		
+Completing proof of master method
+if a = b^d, then
+	(%) = cn^d * (logb(n) + 1) = O(n^d * log(n))
+
+Basic sums fact (detour into geometric series)
+	For r!=1, we have
+		1+r+r^2+r^3+...+r^k = (r^(k+1) - 1)/(r-1)
+	Proof: by induction
+	Upshot:
+			(1) if r<1 is constant, <= 1/(1-r) = a constant
+				i.e. 1st term of sum dominates
+			(2) if r>1 is constant, RHS is <= r^k * (1 + 1/(r-1))
+				i.e. last term of sum dominates
+	
+Case 2:
+	if a < b^d [RSP < RWS], then a/b^d <= a constant independent of n
+	 = O(n^d)	[total work dominated by top level]
+
+Case 3:
+	If a > b^d [RSP > RWS], then (a/b^d) > 1, so largest term of sum over j of (%) dominates
+	then (%) = O(n^d * largest term of sum) = O(n^d * largest value of j)
+		 = O(n^d * (a/b^d)^logb(n))
+	note: b^(-dlogb(n)) = (b^logb(n))^-d = n^-d
+	which cancels out with n^d
+	So: (%) = O(a^logb(n))
+	
+	And a^logb(n) is precisely the number of leaves of recursion tree!
+	What else is: a^logb(n) = n^logb(a) (since logb(n)logb(a) = logb(a)logb(n))
+	End Case 3
+	
+QED!
+
+			
+		
+		
+
+

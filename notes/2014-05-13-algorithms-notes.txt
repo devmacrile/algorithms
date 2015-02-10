@@ -1,0 +1,135 @@
+Design and analysis of algorithms
+week 2
+
+//Quicksort
+-Tony Hoare, circa 1961
+-Definitely a "greatest hit" algorithm
+-Prevalent in practice
+-Beautiful analysis
+-O(nlog(n)) time "on average", works in place
+	-i.e. minimal extra memory needed
+
+Again, the sorting problem:
+input: unsorted array of n numbers
+output: same numbers, sorted in increasing order
+
+Simplifying assumption: no duplicates in array (distinct)
+
+Key idea: partition array around a pivot element
+	-pick element of array
+	-rearrange array so that:
+		-left of pivot ==> less than pivot
+		-right of pivot ==> greater than pivot
+		-note: puts pivot in its "rightful" position!
+		
+Two cool facts about partition:
+	(1) linear O(n) time, no extra memory (more on this later)
+	(2) reduces problem size
+		-after partition, only have to recursively sort each 'bucket'
+		
+High level description
+	QuickSort( array A, length n )
+		-> if n = 1, return
+		-> p = choosePivot(A,n) #for now, just some way
+		-> Partition A around p (call left 1st part, right 2nd part)
+		-> recursively sort 1st part
+		-> recursively sort 2nd part
+		
+One of the few divide & conquer algorithms with no 'combine' step!
+
+Outline of QuickSort Lectures
+- The partition subroutine
+- Correctness
+- Choosing a good pivot
+- Randomized QuickSort
+- Analysis
+	-Decomposition principle
+	-The key insight
+	-Final calculations
+
+
+//Partitioning around a pivot
+I. The easy way out
+	Using O(n) extra memory, easy to partition around pivot in O(n) time
+	Choose pivot. Do single scan of input array, placing elements in output 	array at the edges (i.e. working toward the middle)
+
+II. In-place implementation
+	Assume: pivot = 1st element of array
+	[if not, swap pivot <-> 1st element as preprocessing step]
+	
+	High-level idea:
+		-single scan through array
+		-invariant: everything looked at so far is partitioned
+		-keep pointers i,j
+			-i points at break between numbers <> pivot
+			-j is the transition from partitioned and unpartitioned
+
+Pseudocode for partition
+
+Partition( A, l, r )
+	p = A[l]
+	i = l+1
+	for j = l+1 to r:	#if A[j] > p do nothing
+		if A[j] < p:
+			swap A[j] and A[i]
+			i++
+	swap A[l] and A[i-1]
+	
+Running time:
+	-running time = O(n), where n = r-l+1 is the length of the input (sub) array.
+	-reason: O(1) work per array entry
+	-Also: clearly works in place (repeated swaps)
+		-not allocating space for output array
+Correctness:
+	By induction
+	Claim: the for loop maintains the invariant
+		(1) A[l+1], ..., A[i-1] are all less than the pivot
+		(2) A[i], ..., A[j-1] are all greater than pivot
+			-check this by induction :)
+	Consequence: at end of for loop, we have [ p | <p | >p ]
+		==> after final swap, array partitioned around pivot
+			i.e. [ <p | p | >p ]
+	QED!
+	
+
+
+//Choosing a good pivot
+Q: running time of Quicksort?
+A: depends on the quality of the pivot
+
+Q: Suppose we implement QuickSort so that ChoosePivot always selects the first element of the array.  What is the running time of this algorithm on an input array that is already sorted?
+A: O(n^2)
+	Why? The split on the recursive calls is 1, n-1
+	This happens over and over (so, recursion depth of n)
+	so runtime >= n + (n-1) + .... + 1
+				= O(n^2)
+				
+Q: Suppose we run QuickSort on some input, and, magically, every recursive call chooses the median element of its subarray as its pivot.  What's the running time in this case?
+A: O(nlogn)
+	Reason: let T(n) = running time on arrays of size n
+			Then T(n) <= 2T(n/2) + O(n) ==> T(n) = O(nlogn)
+
+Random pivots
+	Key question: how to choose pivots?
+	Big idea: random pivots! every time we recursively call quicksort, among the k candidates, we choose the pivot with uniform probability 1/k
+	Hope: a random pivot is "pretty good" "often enough"
+	Intuition: 
+		(1) if always get a 25-75 split, good enough for O(nlogn) running time [Non-trivial exercise: prove this via recursion tree!]
+		(2) half of elements give a 25-75 split or better
+		
+	Q: does this really work?
+	A: Have to do the analysis :)
+	
+Average running time of QuickSort
+QuickSort Theorem: for every input array of length n, the average running time of QuickSort (with random pivots) is O(nlogn)
+note: holds for every input [no assumptions on the data]
+-recall our guiding principles! (general purpose algorithms)
+-"average" is over random choices made by the algorithm (i.e. pivot choices)
+
+	
+	
+
+
+
+
+
