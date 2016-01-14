@@ -1,5 +1,7 @@
-# brute force inversion counter
-# used as extra test/validation
+"""
+Brute force inversion counter
+Used for comparison of efficiency and correctness with merge-sort implementation
+"""
 
 def count_inversions(list):
     num_inversions = 0
@@ -9,8 +11,6 @@ def count_inversions(list):
                 num_inversions += 1
     return num_inversions
     
-    
-
 import time 
 start = time.time()
 

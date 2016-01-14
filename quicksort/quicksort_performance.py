@@ -1,5 +1,7 @@
-# Script to count QuickSort comparisons for varying input lengths
-# Devin Riley
+"""
+Script to count QuickSort comparisons for varying input lengths
+Devin Riley
+"""
 
 import time
 import csv

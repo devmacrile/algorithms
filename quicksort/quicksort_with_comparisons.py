@@ -1,15 +1,20 @@
-# Counting quicksort comparisons for different pivot values:
-# First element, last element, 'median-of-three' element
-# Average running time of quicksort is O(nlogn)
-# which => E[C] = O(nlogn), where C is the number
-# of comparisons made by the quicksort algorithm
+"""
+Counting quicksort comparisons for different pivot values:
+First element, last element, 'median-of-three' element
+Average running time of quicksort is O(nlogn), which => E[C] = O(nlogn), 
+where C is the number of comparisons made by the quicksort algorithm
+"""
+
+import time
 
 
 def quicksort_with_comparisons(A, l, r, method, num_comparisons):
-	# Requires A list of unique integers
-	# l,r are indices indicating range of elements to sort
-	# method is one of 'first', 'last', 'median-of-three'
-	# Returns count of comparisons made during sort
+	"""
+	Requires A list of unique integers
+	l,r are indices indicating range of elements to sort
+	method is one of 'first', 'last', 'median-of-three'
+	Returns count of comparisons made during sort
+	"""
 	
 	if l < r:
 		pivotIndex = choose_pivot(A, l, r, method)
@@ -37,31 +42,33 @@ def quicksort_with_comparisons(A, l, r, method, num_comparisons):
 
 
 def choose_pivot(A, l, r, method):
-	if method == "first":
-		return l
-	elif method == "last":
-		return r
-	elif method == "median-of-three":
-		mid = (r + l)/2
-		vals = [A[l], A[mid], A[r]]
-		mn = min(vals)
-		mx = max(vals)
-		for i in [l, mid, r]:
-			if A[i] != mn and A[i] != mx:
-				return i
-		return mid  # this covers the case where r-l == 1
-	else:
-		return -1
+    """
+    Choose pivot type at run time based on parameter 'method'
+    """
+    if method == "first":
+        return l
+    elif method == "last":
+        return r
+    elif method == "median-of-three":
+        mid = (r + l)/2
+        vals = [A[l], A[mid], A[r]]
+        mn = min(vals)
+        mx = max(vals)
+        for i in [l, mid, r]:
+            if A[i] != mn and A[i] != mx:
+                return i
+        return mid  # this covers the case where r-l == 1
+    else:
+        return -1
 		
 		
 		
 def main():
-	import time
+    # Count comparisons for each pivot type	
 	pivots = ["first", "last", "median-of-three"]
-    	
-    # count comparisons for each pivot type	
 	for piv in pivots:
-		# build list of integers from file
+		
+		# Build list of integers from file
 		file = open('data/QuickSort.txt')
 		ints = file.read().strip().split("\n")
 		for i in range(len(ints)):
@@ -79,4 +86,3 @@ def main():
 if __name__ == "__main__":
 	print "Running quicksort comparisons..."
 	main()
-		

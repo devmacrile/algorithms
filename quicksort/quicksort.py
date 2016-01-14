@@ -1,13 +1,15 @@
-# QuickSort implementation
+"""
+Implementation of the QuickSort sorting algorithm
+"""
 
 import random
 
 def quicksort(A, l, r, method):
-    # requires A an array; l,r are on (0,len(A)-1) with l <= r
-    # l,r are indices indicating which part of array A
-    # the recursive call should work on
-    # effects: sorts array A using QuickSort algorithm
-    
+    """
+    Requires A an array; l,r are on (0,len(A)-1) with l <= r
+    l,r are indices indicating which part of array A on which the recursive call should work
+    Effects: sorts array A using QuickSort algorithm
+    """
     if l < r:
 		pivotIndex = choose_pivot(A, l, r, method)
 		if pivotIndex == -1:
@@ -28,6 +30,9 @@ def quicksort(A, l, r, method):
 	
 
 def choose_pivot(A, l, r, method):
+    """
+    Method to choose pivot type at run type based on parameter 'method'
+    """
 	if method == "first":
 		return l
 	elif method == "last":
@@ -44,6 +49,3 @@ def choose_pivot(A, l, r, method):
 	else:
 		return -1
 		
-
-
-

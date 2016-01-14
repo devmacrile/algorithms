@@ -1,9 +1,10 @@
 # Graph class implementation
 # Devin Riley, February 2015
 
+"""
+	Implement a graph as a dictionary of dictionaries
+"""
 
-# implement a graph as a dictionary of dictionaries
-# inherits from dict (=> has all methods/operators of dict)
 class Graph(dict):
     """A Graph is a dictionary of dictionaries.  The outer
     dictionary maps from a vertex to an inner dictionary.
@@ -28,8 +29,8 @@ class Graph(dict):
         """add (e) to the graph by adding entry in both directions. 
         If already an edge connecting nodes, new edge replaces it. """
         v,w = e
-        self[v][w] = e  # self[v] is a vertex dictionary, add (e) with key (w)
-        self[w][v] = e  # self[w] is a vertex dictionary, add (e) with key (v)
+        self[v][w] = e
+        self[w][v] = e
     
     def get_edge(self, v1, v2):
         """returns edge between v1, v2 if there is one, otherwise returns None"""

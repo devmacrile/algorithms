@@ -1,8 +1,9 @@
-# Merge-sort implementation
-# Devin Riley
+"""
+Implementation of the merge-sort sorting algorithm
+Devin Riley
+"""
 
-
-import random       # for producing unsorted lists for testing
+import random
 
 def merge_sort(list):
     """Merge sort implementation
@@ -14,10 +15,10 @@ def merge_sort(list):
     
     result = []  # for storing the sorted list
     
-    if len(list) == 1:  # base case
+    # Checks for base cases
+    if len(list) == 1:
         return list
-        
-    if len(list) == 2:  # base case for recursion
+    if len(list) == 2:
         if(list[0] > list[1]):
             result.append(list[1])
             result.append(list[0])
@@ -25,7 +26,7 @@ def merge_sort(list):
         else:
             return list
     
-    # split list into halves
+    # Split 'list' into two halves
     lhs = []
     rhs = []
     for i in range(len(list)):
@@ -34,11 +35,11 @@ def merge_sort(list):
         else:
             rhs.append(list[i])
     
-    # recursive calls
+    # Recursive calls on each half of original 'list'
     sorted_lhs = merge_sort(lhs)
     sorted_rhs = merge_sort(rhs)
     
-    # merge
+    # Merge step to combine recursive calls
     result = merge(sorted_lhs, sorted_rhs)
     
     return result
@@ -46,9 +47,9 @@ def merge_sort(list):
     
  
 def merge(list1, list2):
-    # requires two sorted lists
-    # returns sorted list
-    
+    """
+    Combines two sorted lists into a single sorted list
+    """
     result = []
     i = j = 0   # to iterate through lhs, rhs
     ln1 = len(list1)
@@ -72,6 +73,4 @@ def merge(list1, list2):
                 result.append(list1[i])
                 i += 1
     return result
-    
-         
             
