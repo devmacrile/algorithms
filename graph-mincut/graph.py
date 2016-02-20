@@ -1,9 +1,8 @@
-# Graph class implementation
-# Devin Riley, February 2015
-
 """
 	Implement a graph as a dictionary of dictionaries
 """
+
+import random
 
 class Graph(dict):
     """A Graph is a dictionary of dictionaries.  The outer
@@ -20,9 +19,17 @@ class Graph(dict):
         
         for e in es:
             self.add_edge(e)
+            
+    def num_vertices(self):
+        return len(self)
+        
+    def num_edges(self):
+        es = 0
+        for v in self:
+            es += len(self[v])
+        return es/2
         
     def add_vertex(self, v):
-        """add v to the graph"""
         self[v] = {}
             
     def add_edge(self, e):
@@ -38,6 +45,13 @@ class Graph(dict):
             return self[v1][v2]
         else:
             return None
+    
+    def remove_vertex(self, v):
+        """ removes vertex v from graph"""
+        out_edges = self.out_edges(v)
+        for e in out_edges:
+            self.remove_edge(e)
+        del self[v]
     
     def remove_edge(self, e):
         """removes all references to edge e"""
@@ -82,9 +96,7 @@ class Graph(dict):
         
     def add_all_edges(self):
         """makes current instance a complete graph, adding edge between each pair of nodes"""
-        for node in self:  
-        	# this seems like a bad way of doing this
-        	# so may need more thought later
+        for node in self:
             for vertex in self:
                 if node != vertex and self.get_edge(node, vertex) == None:
                     new_edge = Edge(node, vertex)  # cross dependency on Edge.. bad?
@@ -97,15 +109,11 @@ class Graph(dict):
             self.remove_edge(edge)
 
 
-
-
-
 class Vertex(object):
     def __init__(self, label = ''):
         self.label = label
     
     def __repr__(self):
-        #returns a string representation of node
         return 'Vertex(%s)' % repr(self.label)    
 
     __str__ = __repr__
