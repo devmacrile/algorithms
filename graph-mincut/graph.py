@@ -1,5 +1,5 @@
 """
-	Implement a graph as a dictionary of dictionaries
+Implementation of a graph as a dictionary of dictionaries
 """
 
 import random
@@ -121,7 +121,7 @@ class Vertex(object):
   
    
 class Edge(tuple):
-    def __new__(cls, v1, v2):#overriding new (python invokes 'new' then 'init')
+    def __new__(cls, v1, v2):  # overriding new (python invokes 'new' then 'init')
         """tuple immutable; for immutable objects, 
         common to override __new__, as can't modify elements in __init"""
         return tuple.__new__(cls, (v1, v2))
