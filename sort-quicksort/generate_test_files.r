@@ -9,7 +9,3 @@ for(i in sizes){
   fname <- paste("data/QuickSort-", i, ".txt", sep="")
   write.table(arr, fname, row.names=FALSE, col.names=FALSE)
 }
-
-
-
-
