@@ -9,7 +9,10 @@ that f(u) < f(v).
 from directed_graph import DirectedGraph
 
 class TopologicalSort:
-    """ Methods for creating a topological ordering of given DAG G """
+    """ 
+    Methods for creating a topological ordering of given DAG G 
+    Assumes for now that G is in fact acyclic (no checks on this)
+    """
     
     def __init__(self, G):
         self.G = G

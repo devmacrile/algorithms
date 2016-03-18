@@ -1,4 +1,5 @@
 import unittest
+import random
 from topological_sort import TopologicalSort
 from directed_graph import DirectedGraph
 from directed_graph import Vertex
@@ -30,6 +31,23 @@ class TestTopologicalSort(unittest.TestCase):
         self.assertTrue(v1.label < v3.label)
         self.assertTrue(v2.label < v4.label)
         self.assertTrue(v3.label < v4.label)
+        
+    def test_random_acyclic_graph(self):
+        n = 10
+        G = DirectedGraph()
+        for i in range(n):
+            v = Vertex(i)
+            G.add_vertex(v)
+        for v in G.vertices():
+            for j in range(n/2):
+                v2 = random.choice(G.vertices())
+                if int(v.name) < int(v2.name):
+                    e = Edge(v, v2)
+                    G.add_edge(e)
+        T = TopologicalSort(G)
+        T.run()
+        # TODO: How to confirm results?
+            
         
 if __name__ == '__main__':
     unittest.main()
