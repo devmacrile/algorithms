@@ -28,7 +28,7 @@ class DirectedGraph(dict):
         self[v] = {}
             
     def add_edge(self, e):
-        """add (e) to the graph by adding entry in both directions. 
+        """add (e) to the graph by adding entry in one direction.
         If already an edge connecting nodes, new edge replaces it. """
         v,w = e
         self[v][w] = e
@@ -100,11 +100,16 @@ class DirectedGraph(dict):
                 count += 1
         return count
         
+    def vertices_by_label(self, decreasing = True):
+        nodes = self.vertices()
+        return sorted(nodes, key=lambda x: x.label, reverse = decreasing)
+        
 class Vertex(object):
     def __init__(self, name = ''):
         self.name = name
         self.explored = False
         self.label = -1
+        self.leader = None  # specifically for Kosaraju algorithm
         
     def is_explored(self):
         return self.explored
@@ -117,6 +122,9 @@ class Vertex(object):
     
     def set_label(self, i):
         self.label = i
+        
+    def set_leader(self, v):
+        self.leader = v
     
     def __repr__(self):
         return 'Vertex(%s, %s, %s)' % (repr(self.name), self.explored, self.label)    

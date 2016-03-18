@@ -46,7 +46,7 @@ class TestTopologicalSort(unittest.TestCase):
                     G.add_edge(e)
         T = TopologicalSort(G)
         T.run()
-        # TODO: How to confirm results?
+        # TODO: Confirm results
             
         
 if __name__ == '__main__':
