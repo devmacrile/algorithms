@@ -15,6 +15,8 @@ class TestMinHeap(unittest.TestCase):
         print h.extract()
         print h.extract()
         print h.extract()
+        print h.extract()
+        print h.extract()
         
         
 if __name__ == '__main__':

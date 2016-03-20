@@ -44,19 +44,36 @@ class MinHeap:
         
     def _bubble_up(self, i):
         while self.heapArr[i // 2][0] > self.heapArr[i][0]:
-            print "Parent: ", self.heapArr[i // 2]
-            print "Node: ", self.heapArr[i]
             temp = self.heapArr[i // 2]
             self.heapArr[i // 2] = self.heapArr[i]
             self.heapArr[i] = temp
             i = i // 2
            
     def _bubble_down(self, i):
-        pass
-            
-       
-        
-            
+        if self.size == 1:
+            return
+        while (2*i) < self.size:
+            p = self.heapArr[i]
+            c_idx = self._min_child(i)
+            ch = self.heapArr[c_idx]
+            if p[0] > ch[0]:
+                self._swap(i, c_idx)
+            i = c_idx
+                       
+    def _min_child(self, i):
+        """ Return the child with the smaller key value.  Only called when >=1 child. """
+        if (2*i + 1) >= self.size:
+            return 2*i
+        else:
+            if self.heapArr[2*i][0] < self.heapArr[(2*i) + 1][0]:
+                return 2*i
+            else:
+                return (2*i + 1)    
     
+    def _swap(self, i, j):
+        temp = self.heapArr[i]
+        self.heapArr[i] = self.heapArr[j]
+        self.heapArr[j] = temp
+                
             
         
